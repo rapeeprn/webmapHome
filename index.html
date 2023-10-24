@@ -1,0 +1,979 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css"><link rel="stylesheet" href="css/L.Control.Locate.min.css">
+        <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script><script src="js/L.Control.Locate.min.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="data/Kamphaengphet_1.js"></script>
+        <script src="data/Tak_2.js"></script>
+        <script src="data/Uthaithani_3.js"></script>
+        <script src="data/Uttaradit_4.js"></script>
+        <script src="data/Sukhothai_5.js"></script>
+        <script src="data/Phetchabun_6.js"></script>
+        <script src="data/Phitsanulok_7.js"></script>
+        <script src="data/Phichit_8.js"></script>
+        <script src="data/NakhonSawan_9.js"></script>
+        <script>
+        var highlightLayer;
+        function highlightFeature(e) {
+            highlightLayer = e.target;
+
+            if (e.target.feature.geometry.type === 'LineString') {
+              highlightLayer.setStyle({
+                color: '#ffff00',
+              });
+            } else {
+              highlightLayer.setStyle({
+                fillColor: '#ffff00',
+                fillOpacity: 1
+              });
+            }
+        }
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:22, minZoom:1
+        })
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        L.control.locate({locateOptions: {maxZoom: 19}}).addTo(map);
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+            if (bounds_group.getLayers().length) {
+                map.fitBounds(bounds_group.getBounds());
+            }
+        }
+        map.createPane('pane_ESRIWorldTopo_0');
+        map.getPane('pane_ESRIWorldTopo_0').style.zIndex = 400;
+        var layer_ESRIWorldTopo_0 = L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+            pane: 'pane_ESRIWorldTopo_0',
+            opacity: 1.0,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 22,
+            minNativeZoom: 0,
+            maxNativeZoom: 20
+        });
+        layer_ESRIWorldTopo_0;
+        map.addLayer(layer_ESRIWorldTopo_0);
+        function pop_Kamphaengphet_1(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AMP_NAME_T'] !== null ? autolinker.link(feature.properties['AMP_NAME_T'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AMP_NAME_E'] !== null ? autolinker.link(feature.properties['AMP_NAME_E'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape_Leng'] !== null ? autolinker.link(feature.properties['Shape_Leng'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape_Area'] !== null ? autolinker.link(feature.properties['Shape_Area'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['TH_Provinc'] !== null ? autolinker.link(feature.properties['TH_Provinc'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['TH_Provi_1'] !== null ? autolinker.link(feature.properties['TH_Provi_1'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_coconut</th>\
+                        <td>' + (feature.properties['DATA_coconut'] !== null ? autolinker.link(feature.properties['DATA_coconut'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_durian</th>\
+                        <td>' + (feature.properties['DATA_durian'] !== null ? autolinker.link(feature.properties['DATA_durian'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_longun</th>\
+                        <td>' + (feature.properties['DATA_longun'] !== null ? autolinker.link(feature.properties['DATA_longun'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_mangosteen</th>\
+                        <td>' + (feature.properties['DATA_mangosteen'] !== null ? autolinker.link(feature.properties['DATA_mangosteen'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_rambutan</th>\
+                        <td>' + (feature.properties['DATA_rambutan'] !== null ? autolinker.link(feature.properties['DATA_rambutan'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_rubber</th>\
+                        <td>' + (feature.properties['DATA_rubber'] !== null ? autolinker.link(feature.properties['DATA_rubber'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Kamphaengphet_1_0() {
+            return {
+                pane: 'pane_Kamphaengphet_1',
+                opacity: 1,
+                color: 'rgba(3,8,12,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(184,86,161,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Kamphaengphet_1');
+        map.getPane('pane_Kamphaengphet_1').style.zIndex = 401;
+        map.getPane('pane_Kamphaengphet_1').style['mix-blend-mode'] = 'normal';
+        var layer_Kamphaengphet_1 = new L.geoJson(json_Kamphaengphet_1, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Kamphaengphet_1',
+            layerName: 'layer_Kamphaengphet_1',
+            pane: 'pane_Kamphaengphet_1',
+            onEachFeature: pop_Kamphaengphet_1,
+            style: style_Kamphaengphet_1_0,
+        });
+        bounds_group.addLayer(layer_Kamphaengphet_1);
+        map.addLayer(layer_Kamphaengphet_1);
+        function pop_Tak_2(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AMP_NAME_T'] !== null ? autolinker.link(feature.properties['AMP_NAME_T'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AMP_NAME_E'] !== null ? autolinker.link(feature.properties['AMP_NAME_E'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape_Leng'] !== null ? autolinker.link(feature.properties['Shape_Leng'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape_Area'] !== null ? autolinker.link(feature.properties['Shape_Area'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['TH_Provinc'] !== null ? autolinker.link(feature.properties['TH_Provinc'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['TH_Provi_1'] !== null ? autolinker.link(feature.properties['TH_Provi_1'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_coconut</th>\
+                        <td>' + (feature.properties['DATA_coconut'] !== null ? autolinker.link(feature.properties['DATA_coconut'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_durian</th>\
+                        <td>' + (feature.properties['DATA_durian'] !== null ? autolinker.link(feature.properties['DATA_durian'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_longun</th>\
+                        <td>' + (feature.properties['DATA_longun'] !== null ? autolinker.link(feature.properties['DATA_longun'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_mangosteen</th>\
+                        <td>' + (feature.properties['DATA_mangosteen'] !== null ? autolinker.link(feature.properties['DATA_mangosteen'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_rambutan</th>\
+                        <td>' + (feature.properties['DATA_rambutan'] !== null ? autolinker.link(feature.properties['DATA_rambutan'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_rubber</th>\
+                        <td>' + (feature.properties['DATA_rubber'] !== null ? autolinker.link(feature.properties['DATA_rubber'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Tak_2_0() {
+            return {
+                pane: 'pane_Tak_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(81,82,184,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Tak_2');
+        map.getPane('pane_Tak_2').style.zIndex = 402;
+        map.getPane('pane_Tak_2').style['mix-blend-mode'] = 'normal';
+        var layer_Tak_2 = new L.geoJson(json_Tak_2, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Tak_2',
+            layerName: 'layer_Tak_2',
+            pane: 'pane_Tak_2',
+            onEachFeature: pop_Tak_2,
+            style: style_Tak_2_0,
+        });
+        bounds_group.addLayer(layer_Tak_2);
+        map.addLayer(layer_Tak_2);
+        function pop_Uthaithani_3(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AMP_NAME_T'] !== null ? autolinker.link(feature.properties['AMP_NAME_T'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AMP_NAME_E'] !== null ? autolinker.link(feature.properties['AMP_NAME_E'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape_Leng'] !== null ? autolinker.link(feature.properties['Shape_Leng'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape_Area'] !== null ? autolinker.link(feature.properties['Shape_Area'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['TH_Provinc'] !== null ? autolinker.link(feature.properties['TH_Provinc'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['TH_Provi_1'] !== null ? autolinker.link(feature.properties['TH_Provi_1'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_coconut</th>\
+                        <td>' + (feature.properties['DATA_coconut'] !== null ? autolinker.link(feature.properties['DATA_coconut'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_durian</th>\
+                        <td>' + (feature.properties['DATA_durian'] !== null ? autolinker.link(feature.properties['DATA_durian'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_longun</th>\
+                        <td>' + (feature.properties['DATA_longun'] !== null ? autolinker.link(feature.properties['DATA_longun'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_mangosteen</th>\
+                        <td>' + (feature.properties['DATA_mangosteen'] !== null ? autolinker.link(feature.properties['DATA_mangosteen'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_rambutan</th>\
+                        <td>' + (feature.properties['DATA_rambutan'] !== null ? autolinker.link(feature.properties['DATA_rambutan'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_rubber</th>\
+                        <td>' + (feature.properties['DATA_rubber'] !== null ? autolinker.link(feature.properties['DATA_rubber'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Uthaithani_3_0() {
+            return {
+                pane: 'pane_Uthaithani_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(87,176,184,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Uthaithani_3');
+        map.getPane('pane_Uthaithani_3').style.zIndex = 403;
+        map.getPane('pane_Uthaithani_3').style['mix-blend-mode'] = 'normal';
+        var layer_Uthaithani_3 = new L.geoJson(json_Uthaithani_3, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Uthaithani_3',
+            layerName: 'layer_Uthaithani_3',
+            pane: 'pane_Uthaithani_3',
+            onEachFeature: pop_Uthaithani_3,
+            style: style_Uthaithani_3_0,
+        });
+        bounds_group.addLayer(layer_Uthaithani_3);
+        map.addLayer(layer_Uthaithani_3);
+        function pop_Uttaradit_4(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AMP_NAME_T'] !== null ? autolinker.link(feature.properties['AMP_NAME_T'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AMP_NAME_E'] !== null ? autolinker.link(feature.properties['AMP_NAME_E'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape_Leng'] !== null ? autolinker.link(feature.properties['Shape_Leng'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape_Area'] !== null ? autolinker.link(feature.properties['Shape_Area'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['TH_Provinc'] !== null ? autolinker.link(feature.properties['TH_Provinc'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['TH_Provi_1'] !== null ? autolinker.link(feature.properties['TH_Provi_1'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_coconut</th>\
+                        <td>' + (feature.properties['DATA_coconut'] !== null ? autolinker.link(feature.properties['DATA_coconut'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_durian</th>\
+                        <td>' + (feature.properties['DATA_durian'] !== null ? autolinker.link(feature.properties['DATA_durian'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_longun</th>\
+                        <td>' + (feature.properties['DATA_longun'] !== null ? autolinker.link(feature.properties['DATA_longun'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_mangosteen</th>\
+                        <td>' + (feature.properties['DATA_mangosteen'] !== null ? autolinker.link(feature.properties['DATA_mangosteen'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_rambutan</th>\
+                        <td>' + (feature.properties['DATA_rambutan'] !== null ? autolinker.link(feature.properties['DATA_rambutan'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_rubber</th>\
+                        <td>' + (feature.properties['DATA_rubber'] !== null ? autolinker.link(feature.properties['DATA_rubber'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Uttaradit_4_0() {
+            return {
+                pane: 'pane_Uttaradit_4',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(90,184,90,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Uttaradit_4');
+        map.getPane('pane_Uttaradit_4').style.zIndex = 404;
+        map.getPane('pane_Uttaradit_4').style['mix-blend-mode'] = 'normal';
+        var layer_Uttaradit_4 = new L.geoJson(json_Uttaradit_4, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Uttaradit_4',
+            layerName: 'layer_Uttaradit_4',
+            pane: 'pane_Uttaradit_4',
+            onEachFeature: pop_Uttaradit_4,
+            style: style_Uttaradit_4_0,
+        });
+        bounds_group.addLayer(layer_Uttaradit_4);
+        map.addLayer(layer_Uttaradit_4);
+        function pop_Sukhothai_5(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AMP_NAME_T'] !== null ? autolinker.link(feature.properties['AMP_NAME_T'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AMP_NAME_E'] !== null ? autolinker.link(feature.properties['AMP_NAME_E'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape_Leng'] !== null ? autolinker.link(feature.properties['Shape_Leng'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape_Area'] !== null ? autolinker.link(feature.properties['Shape_Area'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['TH_Provinc'] !== null ? autolinker.link(feature.properties['TH_Provinc'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['TH_Provi_1'] !== null ? autolinker.link(feature.properties['TH_Provi_1'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_coconut</th>\
+                        <td>' + (feature.properties['DATA_coconut'] !== null ? autolinker.link(feature.properties['DATA_coconut'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_durian</th>\
+                        <td>' + (feature.properties['DATA_durian'] !== null ? autolinker.link(feature.properties['DATA_durian'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_longun</th>\
+                        <td>' + (feature.properties['DATA_longun'] !== null ? autolinker.link(feature.properties['DATA_longun'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_mangosteen</th>\
+                        <td>' + (feature.properties['DATA_mangosteen'] !== null ? autolinker.link(feature.properties['DATA_mangosteen'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_rambutan</th>\
+                        <td>' + (feature.properties['DATA_rambutan'] !== null ? autolinker.link(feature.properties['DATA_rambutan'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_rubber</th>\
+                        <td>' + (feature.properties['DATA_rubber'] !== null ? autolinker.link(feature.properties['DATA_rubber'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Sukhothai_5_0() {
+            return {
+                pane: 'pane_Sukhothai_5',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(227,237,77,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Sukhothai_5');
+        map.getPane('pane_Sukhothai_5').style.zIndex = 405;
+        map.getPane('pane_Sukhothai_5').style['mix-blend-mode'] = 'normal';
+        var layer_Sukhothai_5 = new L.geoJson(json_Sukhothai_5, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Sukhothai_5',
+            layerName: 'layer_Sukhothai_5',
+            pane: 'pane_Sukhothai_5',
+            onEachFeature: pop_Sukhothai_5,
+            style: style_Sukhothai_5_0,
+        });
+        bounds_group.addLayer(layer_Sukhothai_5);
+        map.addLayer(layer_Sukhothai_5);
+        function pop_Phetchabun_6(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AMP_NAME_T'] !== null ? autolinker.link(feature.properties['AMP_NAME_T'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AMP_NAME_E'] !== null ? autolinker.link(feature.properties['AMP_NAME_E'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape_Leng'] !== null ? autolinker.link(feature.properties['Shape_Leng'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape_Area'] !== null ? autolinker.link(feature.properties['Shape_Area'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['TH_Provinc'] !== null ? autolinker.link(feature.properties['TH_Provinc'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['TH_Provi_1'] !== null ? autolinker.link(feature.properties['TH_Provi_1'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_coconut</th>\
+                        <td>' + (feature.properties['DATA_coconut'] !== null ? autolinker.link(feature.properties['DATA_coconut'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_durian</th>\
+                        <td>' + (feature.properties['DATA_durian'] !== null ? autolinker.link(feature.properties['DATA_durian'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_longun</th>\
+                        <td>' + (feature.properties['DATA_longun'] !== null ? autolinker.link(feature.properties['DATA_longun'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_mangosteen</th>\
+                        <td>' + (feature.properties['DATA_mangosteen'] !== null ? autolinker.link(feature.properties['DATA_mangosteen'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_rambutan</th>\
+                        <td>' + (feature.properties['DATA_rambutan'] !== null ? autolinker.link(feature.properties['DATA_rambutan'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_rubber</th>\
+                        <td>' + (feature.properties['DATA_rubber'] !== null ? autolinker.link(feature.properties['DATA_rubber'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Phetchabun_6_0() {
+            return {
+                pane: 'pane_Phetchabun_6',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(237,101,233,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Phetchabun_6');
+        map.getPane('pane_Phetchabun_6').style.zIndex = 406;
+        map.getPane('pane_Phetchabun_6').style['mix-blend-mode'] = 'normal';
+        var layer_Phetchabun_6 = new L.geoJson(json_Phetchabun_6, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Phetchabun_6',
+            layerName: 'layer_Phetchabun_6',
+            pane: 'pane_Phetchabun_6',
+            onEachFeature: pop_Phetchabun_6,
+            style: style_Phetchabun_6_0,
+        });
+        bounds_group.addLayer(layer_Phetchabun_6);
+        map.addLayer(layer_Phetchabun_6);
+        function pop_Phitsanulok_7(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AMP_NAME_T'] !== null ? autolinker.link(feature.properties['AMP_NAME_T'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AMP_NAME_E'] !== null ? autolinker.link(feature.properties['AMP_NAME_E'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape_Leng'] !== null ? autolinker.link(feature.properties['Shape_Leng'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape_Area'] !== null ? autolinker.link(feature.properties['Shape_Area'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['TH_Provinc'] !== null ? autolinker.link(feature.properties['TH_Provinc'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['TH_Provi_1'] !== null ? autolinker.link(feature.properties['TH_Provi_1'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_coconut</th>\
+                        <td>' + (feature.properties['DATA_coconut'] !== null ? autolinker.link(feature.properties['DATA_coconut'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_durian</th>\
+                        <td>' + (feature.properties['DATA_durian'] !== null ? autolinker.link(feature.properties['DATA_durian'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_longun</th>\
+                        <td>' + (feature.properties['DATA_longun'] !== null ? autolinker.link(feature.properties['DATA_longun'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_mangosteen</th>\
+                        <td>' + (feature.properties['DATA_mangosteen'] !== null ? autolinker.link(feature.properties['DATA_mangosteen'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_rambutan</th>\
+                        <td>' + (feature.properties['DATA_rambutan'] !== null ? autolinker.link(feature.properties['DATA_rambutan'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_rubber</th>\
+                        <td>' + (feature.properties['DATA_rubber'] !== null ? autolinker.link(feature.properties['DATA_rubber'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Phitsanulok_7_0() {
+            return {
+                pane: 'pane_Phitsanulok_7',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(237,67,25,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Phitsanulok_7');
+        map.getPane('pane_Phitsanulok_7').style.zIndex = 407;
+        map.getPane('pane_Phitsanulok_7').style['mix-blend-mode'] = 'normal';
+        var layer_Phitsanulok_7 = new L.geoJson(json_Phitsanulok_7, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Phitsanulok_7',
+            layerName: 'layer_Phitsanulok_7',
+            pane: 'pane_Phitsanulok_7',
+            onEachFeature: pop_Phitsanulok_7,
+            style: style_Phitsanulok_7_0,
+        });
+        bounds_group.addLayer(layer_Phitsanulok_7);
+        map.addLayer(layer_Phitsanulok_7);
+        function pop_Phichit_8(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AMP_NAME_T'] !== null ? autolinker.link(feature.properties['AMP_NAME_T'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AMP_NAME_E'] !== null ? autolinker.link(feature.properties['AMP_NAME_E'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape_Leng'] !== null ? autolinker.link(feature.properties['Shape_Leng'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape_Area'] !== null ? autolinker.link(feature.properties['Shape_Area'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['TH_Provinc'] !== null ? autolinker.link(feature.properties['TH_Provinc'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['TH_Provi_1'] !== null ? autolinker.link(feature.properties['TH_Provi_1'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_coconut</th>\
+                        <td>' + (feature.properties['DATA_coconut'] !== null ? autolinker.link(feature.properties['DATA_coconut'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_durian</th>\
+                        <td>' + (feature.properties['DATA_durian'] !== null ? autolinker.link(feature.properties['DATA_durian'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_longun</th>\
+                        <td>' + (feature.properties['DATA_longun'] !== null ? autolinker.link(feature.properties['DATA_longun'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_mangosteen</th>\
+                        <td>' + (feature.properties['DATA_mangosteen'] !== null ? autolinker.link(feature.properties['DATA_mangosteen'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_rambutan</th>\
+                        <td>' + (feature.properties['DATA_rambutan'] !== null ? autolinker.link(feature.properties['DATA_rambutan'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_rubber</th>\
+                        <td>' + (feature.properties['DATA_rubber'] !== null ? autolinker.link(feature.properties['DATA_rubber'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Phichit_8_0() {
+            return {
+                pane: 'pane_Phichit_8',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(237,146,60,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Phichit_8');
+        map.getPane('pane_Phichit_8').style.zIndex = 408;
+        map.getPane('pane_Phichit_8').style['mix-blend-mode'] = 'normal';
+        var layer_Phichit_8 = new L.geoJson(json_Phichit_8, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Phichit_8',
+            layerName: 'layer_Phichit_8',
+            pane: 'pane_Phichit_8',
+            onEachFeature: pop_Phichit_8,
+            style: style_Phichit_8_0,
+        });
+        bounds_group.addLayer(layer_Phichit_8);
+        map.addLayer(layer_Phichit_8);
+        function pop_NakhonSawan_9(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AMP_NAME_T'] !== null ? autolinker.link(feature.properties['AMP_NAME_T'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AMP_NAME_E'] !== null ? autolinker.link(feature.properties['AMP_NAME_E'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape_Leng'] !== null ? autolinker.link(feature.properties['Shape_Leng'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape_Area'] !== null ? autolinker.link(feature.properties['Shape_Area'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['TH_Provinc'] !== null ? autolinker.link(feature.properties['TH_Provinc'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['TH_Provi_1'] !== null ? autolinker.link(feature.properties['TH_Provi_1'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_coconut</th>\
+                        <td>' + (feature.properties['DATA_coconut'] !== null ? autolinker.link(feature.properties['DATA_coconut'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_durian</th>\
+                        <td>' + (feature.properties['DATA_durian'] !== null ? autolinker.link(feature.properties['DATA_durian'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_longun</th>\
+                        <td>' + (feature.properties['DATA_longun'] !== null ? autolinker.link(feature.properties['DATA_longun'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_mangosteen</th>\
+                        <td>' + (feature.properties['DATA_mangosteen'] !== null ? autolinker.link(feature.properties['DATA_mangosteen'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_rambutan</th>\
+                        <td>' + (feature.properties['DATA_rambutan'] !== null ? autolinker.link(feature.properties['DATA_rambutan'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DATA_rubber</th>\
+                        <td>' + (feature.properties['DATA_rubber'] !== null ? autolinker.link(feature.properties['DATA_rubber'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_NakhonSawan_9_0() {
+            return {
+                pane: 'pane_NakhonSawan_9',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(7,118,3,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_NakhonSawan_9');
+        map.getPane('pane_NakhonSawan_9').style.zIndex = 409;
+        map.getPane('pane_NakhonSawan_9').style['mix-blend-mode'] = 'normal';
+        var layer_NakhonSawan_9 = new L.geoJson(json_NakhonSawan_9, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_NakhonSawan_9',
+            layerName: 'layer_NakhonSawan_9',
+            pane: 'pane_NakhonSawan_9',
+            onEachFeature: pop_NakhonSawan_9,
+            style: style_NakhonSawan_9_0,
+        });
+        bounds_group.addLayer(layer_NakhonSawan_9);
+        map.addLayer(layer_NakhonSawan_9);
+        setBounds();
+        var i = 0;
+        layer_Kamphaengphet_1.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['AMP_NAME_T'] !== null?String('<div style="color: #000000; font-size: 13pt; font-family: \'Tw Cen MT Condensed Extra Bold\', sans-serif;">' + layer.feature.properties['AMP_NAME_T']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Kamphaengphet_1'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_Tak_2.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['AMP_NAME_T'] !== null?String('<div style="color: #000000; font-size: 13pt; font-family: \'Tw Cen MT Condensed Extra Bold\', sans-serif;">' + layer.feature.properties['AMP_NAME_T']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Tak_2'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_Uthaithani_3.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['AMP_NAME_T'] !== null?String('<div style="color: #000000; font-size: 13pt; font-family: \'Tw Cen MT Condensed Extra Bold\', sans-serif;">' + layer.feature.properties['AMP_NAME_T']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Uthaithani_3'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_Uttaradit_4.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['AMP_NAME_T'] !== null?String('<div style="color: #000000; font-size: 12pt; font-family: \'Tw Cen MT Condensed Extra Bold\', sans-serif;">' + layer.feature.properties['AMP_NAME_T']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Uttaradit_4'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_Sukhothai_5.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['AMP_NAME_T'] !== null?String('<div style="color: #000000; font-size: 13pt; font-family: \'Tw Cen MT Condensed Extra Bold\', sans-serif;">' + layer.feature.properties['AMP_NAME_T']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Sukhothai_5'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_Phetchabun_6.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['AMP_NAME_T'] !== null?String('<div style="color: #000000; font-size: 13pt; font-family: \'Tw Cen MT Condensed Extra Bold\', sans-serif;">' + layer.feature.properties['AMP_NAME_T']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Phetchabun_6'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_Phitsanulok_7.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['AMP_NAME_T'] !== null?String('<div style="color: #000000; font-size: 13pt; font-family: \'Tw Cen MT Condensed Extra Bold\', sans-serif;">' + layer.feature.properties['AMP_NAME_T']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Phitsanulok_7'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_Phichit_8.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['AMP_NAME_T'] !== null?String('<div style="color: #000000; font-size: 12pt; font-family: \'Tw Cen MT Condensed Extra Bold\', sans-serif;">' + layer.feature.properties['AMP_NAME_T']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Phichit_8'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_NakhonSawan_9.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['AMP_NAME_T'] !== null?String('<div style="color: #000000; font-size: 12pt; font-family: \'Tw Cen MT Condensed Extra Bold\', sans-serif;">' + layer.feature.properties['AMP_NAME_T']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_NakhonSawan_9'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        resetLabels([layer_Kamphaengphet_1,layer_Tak_2,layer_Uthaithani_3,layer_Uttaradit_4,layer_Sukhothai_5,layer_Phetchabun_6,layer_Phitsanulok_7,layer_Phichit_8,layer_NakhonSawan_9]);
+        map.on("zoomend", function(){
+            resetLabels([layer_Kamphaengphet_1,layer_Tak_2,layer_Uthaithani_3,layer_Uttaradit_4,layer_Sukhothai_5,layer_Phetchabun_6,layer_Phitsanulok_7,layer_Phichit_8,layer_NakhonSawan_9]);
+        });
+        map.on("layeradd", function(){
+            resetLabels([layer_Kamphaengphet_1,layer_Tak_2,layer_Uthaithani_3,layer_Uttaradit_4,layer_Sukhothai_5,layer_Phetchabun_6,layer_Phitsanulok_7,layer_Phichit_8,layer_NakhonSawan_9]);
+        });
+        map.on("layerremove", function(){
+            resetLabels([layer_Kamphaengphet_1,layer_Tak_2,layer_Uthaithani_3,layer_Uttaradit_4,layer_Sukhothai_5,layer_Phetchabun_6,layer_Phitsanulok_7,layer_Phichit_8,layer_NakhonSawan_9]);
+        });
+        </script>
+    </body>
+</html>
